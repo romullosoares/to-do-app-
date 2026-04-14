@@ -4,38 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>To-Do List</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg:           #F5F2ED;
       --surface:      #FDFCFA;
-      --border:       rgba(0, 0, 0, 0.10);
+      --surface-2:    #F0EDE7;
+      --border:       rgba(0,0,0,0.09);
+      --border-md:    rgba(0,0,0,0.16);
       --text:         #1A1916;
-      --muted:        #7A7872;
+      --muted:        #8C8880;
+      --muted-light:  #C0BDB7;
 
       --alta-border:  #D85A30;
       --alta-bg:      #FAECE7;
       --alta-text:    #712B13;
-      --alta-dot:     #D85A30;
 
       --media-border: #BA7517;
       --media-bg:     #FAEEDA;
       --media-text:   #633806;
-      --media-dot:    #EF9F27;
 
       --baixa-border: #3B6D11;
       --baixa-bg:     #EAF3DE;
       --baixa-text:   #27500A;
-      --baixa-dot:    #639922;
 
-      --radius:       12px;
-      --radius-sm:    8px;
+      --radius:       14px;
+      --radius-sm:    9px;
+      --radius-xs:    6px;
     }
 
     body {
@@ -46,51 +43,99 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: 3rem 1rem 4rem;
+      padding: 3.5rem 1rem 6rem;
     }
 
-    .app {
-      width: 100%;
-      max-width: 560px;
-    }
+    .app { width: 100%; max-width: 580px; }
 
-    header {
-      margin-bottom: 2.5rem;
+    /* Header */
+    header { margin-bottom: 2.5rem; }
+
+    .header-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
     }
 
     header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       font-weight: 700;
       letter-spacing: -0.03em;
-      line-height: 1.1;
+      line-height: 1;
     }
 
-    header p {
-      margin-top: 0.4rem;
-      font-size: 0.9rem;
+    header h1 em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .header-date {
+      font-size: 0.79rem;
       color: var(--muted);
       font-weight: 300;
+      padding-bottom: 4px;
+      text-align: right;
     }
 
+    .progress-bar-wrap {
+      height: 3px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 0.6rem;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--text);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.4rem;
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+
+    /* Form Card */
     .form-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.25rem 1.25rem 1rem;
-      margin-bottom: 2rem;
+      padding: 1.2rem;
+      margin-bottom: 1.4rem;
     }
 
-    .form-row {
+    .input-row {
       display: flex;
       gap: 8px;
       margin-bottom: 10px;
     }
 
-    .form-row input[type="text"] {
+    .input-wrap {
       flex: 1;
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.28;
+    }
+
+    input[type="text"] {
+      width: 100%;
       height: 42px;
-      padding: 0 14px;
+      padding: 0 14px 0 36px;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--bg);
@@ -101,15 +146,10 @@
       transition: border-color 0.15s;
     }
 
-    .form-row input[type="text"]:focus {
-      border-color: rgba(0,0,0,0.3);
-    }
+    input[type="text"]:focus { border-color: var(--border-md); }
+    input[type="text"]::placeholder { color: var(--muted-light); }
 
-    .form-row input[type="text"]::placeholder {
-      color: #B8B4AC;
-    }
-
-    .form-row select {
+    select {
       height: 42px;
       padding: 0 12px;
       border: 1px solid var(--border);
@@ -117,7 +157,7 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       font-weight: 500;
       outline: none;
       cursor: pointer;
@@ -125,7 +165,7 @@
 
     .btn-add {
       height: 42px;
-      padding: 0 20px;
+      padding: 0 18px;
       background: var(--text);
       color: var(--bg);
       border: none;
@@ -136,105 +176,165 @@
       cursor: pointer;
       white-space: nowrap;
       transition: opacity 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .btn-add:hover { opacity: 0.82; }
+    .btn-add:hover { opacity: 0.78; }
 
     .legend {
       display: flex;
-      gap: 14px;
+      align-items: center;
+      gap: 16px;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
       gap: 5px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--muted);
     }
 
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
     }
 
-    .section-label {
-      font-size: 0.72rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 0.75rem;
+    /* Filter tabs */
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1.2rem;
+      align-items: center;
     }
 
+    .filter-btn {
+      height: 30px;
+      padding: 0 13px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.77rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover { border-color: var(--border-md); color: var(--text); }
+
+    .filter-btn.active {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+
+    .filter-spacer { flex: 1; }
+
+    .btn-clear {
+      height: 30px;
+      padding: 0 12px;
+      border: none;
+      background: transparent;
+      color: var(--muted-light);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: color 0.15s;
+      border-radius: 99px;
+    }
+
+    .btn-clear:hover { color: var(--muted); }
+
+    /* Section label */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+
+    /* Task list */
     .todo-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
-    /* Animação de entrada */
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-8px); }
+      from { opacity: 0; transform: translateY(-6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .todo-item {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 11px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left-width: 3px;
       border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 0.85rem 1rem;
-      animation: slideIn 0.2s ease;
+      padding: 0.8rem 1rem;
+      animation: slideIn 0.18s ease;
+      transition: background 0.12s;
     }
+
+    .todo-item:hover { background: #FDFCFB; }
+    .todo-item.done-item { opacity: 0.6; }
 
     .todo-item.alta  { border-left-color: var(--alta-border); }
     .todo-item.media { border-left-color: var(--media-border); }
     .todo-item.baixa { border-left-color: var(--baixa-border); }
 
-    /* Círculo de status clicável */
+    /* Status circle */
     .status {
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(--border-md);
       flex-shrink: 0;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      transition: all 0.15s;
+      position: relative;
     }
 
-    .status:hover {
-      border-color: rgba(0,0,0,0.35);
-    }
+    .status:hover { border-color: rgba(0,0,0,0.35); background: var(--surface-2); }
 
     .status.concluida {
       background: var(--text);
       border-color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .status.concluida::after {
       content: '';
-      display: block;
-      width: 5px;
-      height: 9px;
-      border-right: 1.5px solid var(--surface);
-      border-bottom: 1.5px solid var(--surface);
-      transform: rotate(45deg) translate(-1px, -1px);
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 5px; height: 8px;
+      border-right: 1.5px solid #FDFCFA;
+      border-bottom: 1.5px solid #FDFCFA;
+      transform: translate(-55%, -60%) rotate(45deg);
+    }
+
+    /* Task body */
+    .task-body {
+      flex: 1;
+      min-width: 0;
     }
 
     .task-text {
-      flex: 1;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       line-height: 1.4;
       transition: color 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .task-text.concluida {
@@ -242,11 +342,18 @@
       color: var(--muted);
     }
 
+    .task-date {
+      font-size: 0.71rem;
+      color: var(--muted-light);
+      margin-top: 2px;
+    }
+
+    /* Badge */
     .badge {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 500;
-      padding: 2px 9px;
-      border-radius: 20px;
+      padding: 2px 8px;
+      border-radius: 99px;
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -255,243 +362,354 @@
     .badge.media { background: var(--media-bg); color: var(--media-text); }
     .badge.baixa { background: var(--baixa-bg); color: var(--baixa-text); }
 
+    /* Remove button */
     .btn-remove {
       width: 26px;
       height: 26px;
       border: none;
       background: transparent;
-      color: #C0BDB8;
-      font-size: 1.1rem;
+      color: var(--muted-light);
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      line-height: 1;
       cursor: pointer;
-      transition: color 0.15s;
+      border-radius: var(--radius-xs);
+      transition: all 0.15s;
       padding: 0;
     }
 
-    .btn-remove:hover { color: #7A7872; }
+    .btn-remove:hover { color: var(--text); background: var(--surface-2); }
 
-    .footer {
-      margin-top: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
       color: var(--muted);
     }
 
-    /* Estado vazio */
-    .empty-state {
-      text-align: center;
-      padding: 2.5rem 1rem;
-      color: var(--muted);
-      font-size: 0.88rem;
+    .empty-state p {
+      font-size: 0.87rem;
       font-weight: 300;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 1.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-badges {
+      display: flex;
+      gap: 7px;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      background: var(--surface-2);
+      border-radius: 99px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .stat-pill b {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .stat-pill.alta-pill {
+      background: var(--alta-bg);
+      color: var(--alta-text);
+    }
+
+    .stat-pill.alta-pill b {
+      color: var(--alta-text);
     }
   </style>
 </head>
 <body>
-
 <div class="app">
 
+  <!-- Header -->
   <header>
-    <h1>Minhas Tarefas</h1>
-    <p>Organize seu dia com prioridade.</p>
+    <div class="header-top">
+      <h1>Minhas<br><em>Tarefas</em></h1>
+      <span class="header-date" id="headerDate"></span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+      <span id="progressText">0% concluído</span>
+      <span id="progressFrac">0 / 0</span>
+    </div>
   </header>
 
+  <!-- Form -->
   <div class="form-card">
-    <div class="form-row">
-      <input type="text" id="taskInput" placeholder="Descreva a tarefa…" />
+    <div class="input-row">
+      <div class="input-wrap">
+        <svg class="input-icon" width="15" height="15" viewBox="0 0 15 15" fill="none">
+          <path d="M7.5 2v11M2 7.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="taskInput" placeholder="Descreva uma nova tarefa…" autocomplete="off" />
+      </div>
       <select id="prioritySelect">
-        <option value="alta">Alta</option>
-        <option value="media" selected>Média</option>
-        <option value="baixa">Baixa</option>
+        <option value="alta">🔴 Alta</option>
+        <option value="media" selected>🟡 Média</option>
+        <option value="baixa">🟢 Baixa</option>
       </select>
-      <button class="btn-add" id="addBtn">Adicionar</button>
+      <button class="btn-add" id="addBtn">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        Adicionar
+      </button>
     </div>
     <div class="legend">
-      <span class="legend-item">
-        <span class="dot" style="background: var(--alta-dot)"></span>Alta
-      </span>
-      <span class="legend-item">
-        <span class="dot" style="background: var(--media-dot)"></span>Média
-      </span>
-      <span class="legend-item">
-        <span class="dot" style="background: var(--baixa-dot)"></span>Baixa
-      </span>
+      <span class="legend-item"><span class="dot" style="background:#D85A30"></span>Alta</span>
+      <span class="legend-item"><span class="dot" style="background:#EF9F27"></span>Média</span>
+      <span class="legend-item"><span class="dot" style="background:#639922"></span>Baixa</span>
     </div>
   </div>
 
-  <p class="section-label">Tarefas pendentes</p>
+  <!-- Filters -->
+  <div class="filter-row">
+    <button class="filter-btn active" data-filter="todas">Todas</button>
+    <button class="filter-btn" data-filter="pendentes">Pendentes</button>
+    <button class="filter-btn" data-filter="concluidas">Concluídas</button>
+    <span class="filter-spacer"></span>
+    <button class="btn-clear" id="clearDone">Limpar concluídas</button>
+  </div>
 
+  <!-- List -->
+  <p class="section-label" id="sectionLabel">Todas as tarefas</p>
   <ul class="todo-list" id="todoList"></ul>
 
+  <!-- Footer -->
   <div class="footer">
-    <span id="totalCount">0 tarefas</span>
-    <span id="doneCount">0 concluídas</span>
+    <div class="footer-badges">
+      <span class="stat-pill"><b id="statTotal">0</b>&nbsp;tarefas</span>
+      <span class="stat-pill alta-pill"><b id="statAlta">0</b>&nbsp;urgentes</span>
+    </div>
+    <span id="statDone">0 concluídas</span>
   </div>
 
 </div>
 
 <script>
-  // ─── Estado da aplicação ────────────────────────────────────────────────────
-  // Array que armazena todos os objetos de tarefa
-  const tasks = [
-    { id: 1, text: 'Entregar o trabalho de Engenharia de Software', priority: 'alta',  done: false },
-    { id: 2, text: 'Revisar anotações da aula de prompt',           priority: 'media', done: false },
-    { id: 3, text: 'Criar repositório no GitHub',                   priority: 'baixa', done: true  },
-    { id: 4, text: 'Fazer deploy na Vercel',                        priority: 'alta',  done: false },
-    { id: 5, text: 'Escrever o README do projeto',                  priority: 'media', done: false },
-  ];
+  /* ── Estado ── */
+  const STORAGE_KEY = 'todo_tasks_v1';
 
-  // Contador para gerar IDs únicos para novas tarefas
-  let nextId = tasks.length + 1;
+  function loadTasks() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (_) {}
+    /* Dados de exemplo para primeiro acesso */
+    return [
+      { id: 1, text: 'Entregar o trabalho de Engenharia de Software', priority: 'alta',  done: false, createdAt: Date.now() - 86400000 },
+      { id: 2, text: 'Revisar anotações da aula de prompt',           priority: 'media', done: false, createdAt: Date.now() - 72000000 },
+      { id: 3, text: 'Criar repositório no GitHub',                   priority: 'baixa', done: true,  createdAt: Date.now() - 48000000 },
+      { id: 4, text: 'Fazer deploy na Vercel',                        priority: 'alta',  done: false, createdAt: Date.now() - 3600000  },
+      { id: 5, text: 'Escrever o README do projeto',                  priority: 'media', done: false, createdAt: Date.now()            },
+    ];
+  }
 
-  // ─── Referências ao DOM ─────────────────────────────────────────────────────
-  const taskInput      = document.getElementById('taskInput');
+  function saveTasks() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); } catch (_) {}
+  }
+
+  let tasks  = loadTasks();
+  let nextId = tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+  let filter = 'todas';
+
+  /* ── Elementos do DOM ── */
+  const taskInput    = document.getElementById('taskInput');
   const prioritySelect = document.getElementById('prioritySelect');
-  const addBtn         = document.getElementById('addBtn');
-  const todoList       = document.getElementById('todoList');
-  const totalCount     = document.getElementById('totalCount');
-  const doneCount      = document.getElementById('doneCount');
+  const addBtn       = document.getElementById('addBtn');
+  const todoList     = document.getElementById('todoList');
+  const clearDoneBtn = document.getElementById('clearDone');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  const progressFrac = document.getElementById('progressFrac');
+  const sectionLabel = document.getElementById('sectionLabel');
+  const statTotal    = document.getElementById('statTotal');
+  const statDone     = document.getElementById('statDone');
+  const statAlta     = document.getElementById('statAlta');
 
-  // ─── Rótulos legíveis por prioridade ────────────────────────────────────────
   const priorityLabel = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
 
-  // ─── Funções principais ─────────────────────────────────────────────────────
+  const sectionLabels = {
+    todas:      'Todas as tarefas',
+    pendentes:  'Tarefas pendentes',
+    concluidas: 'Tarefas concluídas',
+  };
 
-  /**
-   * Adiciona uma nova tarefa ao array e re-renderiza a lista.
-   */
+  /* ── Helpers ── */
+  function escapeHtml(s) {
+    return s
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  function formatDate(ts) {
+    return new Date(ts).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+  }
+
+  function filteredTasks() {
+    if (filter === 'pendentes')  return tasks.filter(t => !t.done);
+    if (filter === 'concluidas') return tasks.filter(t =>  t.done);
+    return tasks;
+  }
+
+  /* ── Adicionar tarefa ── */
   function addTask() {
     const text = taskInput.value.trim();
     if (!text) {
-      // Pequeno shake visual para indicar campo vazio
       taskInput.style.borderColor = 'var(--alta-border)';
-      setTimeout(() => taskInput.style.borderColor = '', 600);
+      taskInput.animate(
+        [{ transform:'translateX(-4px)' },{ transform:'translateX(4px)' },{ transform:'translateX(0)' }],
+        { duration: 200, iterations: 1 }
+      );
+      setTimeout(() => { taskInput.style.borderColor = ''; }, 700);
       taskInput.focus();
       return;
     }
-
-    tasks.push({
-      id:       nextId++,
-      text:     text,
-      priority: prioritySelect.value,
-      done:     false,
+    tasks.unshift({
+      id:        nextId++,
+      text,
+      priority:  prioritySelect.value,
+      done:      false,
+      createdAt: Date.now(),
     });
-
     taskInput.value = '';
     taskInput.focus();
+    saveTasks();
     render();
   }
 
-  /**
-   * Alterna o estado "concluída" de uma tarefa pelo seu ID.
-   * @param {number} id - ID da tarefa a ser alternada
-   */
+  /* ── Alternar conclusão ── */
   function toggleTask(id) {
     const task = tasks.find(t => t.id === id);
-    if (task) {
-      task.done = !task.done;
-      render();
-    }
+    if (task) { task.done = !task.done; saveTasks(); render(); }
   }
 
-  /**
-   * Remove uma tarefa do array pelo seu ID.
-   * @param {number} id - ID da tarefa a ser removida
-   */
+  /* ── Remover tarefa ── */
   function removeTask(id) {
-    const index = tasks.findIndex(t => t.id === id);
-    if (index !== -1) {
-      tasks.splice(index, 1);
-      render();
-    }
+    tasks = tasks.filter(t => t.id !== id);
+    saveTasks();
+    render();
   }
 
-  /**
-   * Renderiza (re-desenha) toda a lista de tarefas no DOM
-   * e atualiza os contadores do rodapé.
-   */
+  /* ── Limpar concluídas ── */
+  function clearDone() {
+    if (!tasks.some(t => t.done)) return;
+    tasks = tasks.filter(t => !t.done);
+    saveTasks();
+    render();
+  }
+
+  /* ── Renderizar lista ── */
   function render() {
-    // Limpa a lista atual
     todoList.innerHTML = '';
+    sectionLabel.textContent = sectionLabels[filter];
 
-    if (tasks.length === 0) {
-      todoList.innerHTML = '<li class="empty-state">Nenhuma tarefa por aqui ainda.</li>';
+    const list = filteredTasks();
+
+    if (list.length === 0) {
+      const msg =
+        filter === 'concluidas' ? 'Nenhuma tarefa concluída ainda.' :
+        filter === 'pendentes'  ? 'Tudo em dia! Sem pendências.' :
+                                  'Adicione sua primeira tarefa acima.';
+      todoList.innerHTML = `<li class="empty-state"><p>${msg}</p></li>`;
     } else {
-      tasks.forEach(task => {
-        // Cria o elemento <li> para cada tarefa
+      list.forEach(task => {
         const li = document.createElement('li');
-        li.className = `todo-item ${task.priority}`;
-
-        // Constrói o HTML interno do item
+        li.className = `todo-item ${task.priority}${task.done ? ' done-item' : ''}`;
         li.innerHTML = `
-          <div class="status ${task.done ? 'concluida' : ''}" data-id="${task.id}" title="Marcar como concluída"></div>
-          <span class="task-text ${task.done ? 'concluida' : ''}">${escapeHtml(task.text)}</span>
+          <div class="status${task.done ? ' concluida' : ''}"
+               data-id="${task.id}"
+               title="Marcar como ${task.done ? 'pendente' : 'concluída'}"></div>
+          <div class="task-body">
+            <div class="task-text${task.done ? ' concluida' : ''}">${escapeHtml(task.text)}</div>
+            <div class="task-date">Adicionada em ${formatDate(task.createdAt)}</div>
+          </div>
           <span class="badge ${task.priority}">${priorityLabel[task.priority]}</span>
-          <button class="btn-remove" data-id="${task.id}" title="Remover tarefa">&times;</button>
+          <button class="btn-remove" data-id="${task.id}" title="Remover tarefa">✕</button>
         `;
-
         todoList.appendChild(li);
       });
     }
 
-    updateFooter();
+    updateStats();
   }
 
-  /**
-   * Atualiza os textos de contagem no rodapé.
-   */
-  function updateFooter() {
+  /* ── Atualizar contadores e barra ── */
+  function updateStats() {
     const total = tasks.length;
     const done  = tasks.filter(t => t.done).length;
+    const alta  = tasks.filter(t => t.priority === 'alta' && !t.done).length;
+    const pct   = total ? Math.round((done / total) * 100) : 0;
 
-    totalCount.textContent = `${total} ${total === 1 ? 'tarefa' : 'tarefas'}`;
-    doneCount.textContent  = `${done} concluída${done !== 1 ? 's' : ''}`;
+    progressFill.style.width = pct + '%';
+    progressText.textContent  = pct + '% concluído';
+    progressFrac.textContent  = `${done} / ${total}`;
+
+    statTotal.textContent = total;
+    statDone.textContent  = `${done} concluída${done !== 1 ? 's' : ''}`;
+    statAlta.textContent  = alta;
   }
 
-  /**
-   * Escapa caracteres especiais para evitar XSS ao inserir texto no DOM.
-   * @param {string} str - Texto bruto do usuário
-   * @returns {string} - Texto seguro para uso em innerHTML
-   */
-  function escapeHtml(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  /* ── Data no cabeçalho ── */
+  function setHeaderDate() {
+    const now = new Date();
+    document.getElementById('headerDate').textContent =
+      now.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
   }
 
-  // ─── Event Listeners ────────────────────────────────────────────────────────
-
-  // Botão "Adicionar"
+  /* ── Event Listeners ── */
   addBtn.addEventListener('click', addTask);
 
-  // Tecla Enter no campo de texto
-  taskInput.addEventListener('keydown', (e) => {
+  taskInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') addTask();
   });
 
-  // Delegação de eventos na lista:
-  // Um único listener captura cliques nos status (toggle) e nos botões de remoção
-  todoList.addEventListener('click', (e) => {
+  /* Delegação de eventos — um único listener cobre status e remoção */
+  todoList.addEventListener('click', e => {
     const id = parseInt(e.target.dataset.id);
     if (!id) return;
-
-    if (e.target.classList.contains('status')) {
-      toggleTask(id);
-    } else if (e.target.classList.contains('btn-remove')) {
-      removeTask(id);
-    }
+    if (e.target.classList.contains('status'))     toggleTask(id);
+    if (e.target.classList.contains('btn-remove')) removeTask(id);
   });
 
-  // ─── Inicialização ──────────────────────────────────────────────────────────
+  /* Filtros */
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      filter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  clearDoneBtn.addEventListener('click', clearDone);
+
+  /* ── Inicialização ── */
+  setHeaderDate();
   render();
 </script>
-
 </body>
 </html>
